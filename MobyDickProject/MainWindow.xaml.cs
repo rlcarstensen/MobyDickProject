@@ -25,12 +25,12 @@ namespace MobyDickProject
         {
             InitializeComponent();
 
-            String bookPath = @"C:\Users\Robert\Documents\visual studio 2017\Projects\MobyDickProject\mobydick.txt";
-            String stopWordsPath = @"C:\Users\Robert\Documents\visual studio 2017\Projects\MobyDickProject\stop-words";
+            //String bookPath = @"C:\Users\Robert\Documents\visual studio 2017\Projects\MobyDickProject\mobydick.txt";
+            //String stopWordsPath = @"C:\Users\Robert\Documents\visual studio 2017\Projects\MobyDickProject\stop-words";
 
-            List<String> stopWords = File.ReadAllLines(stopWordsPath).ToList();
+            //List<String> stopWords = File.ReadAllLines(stopWordsPath).ToList();
 
-            Console.ReadLine();
+            //Console.ReadLine();
         }
     }
 }

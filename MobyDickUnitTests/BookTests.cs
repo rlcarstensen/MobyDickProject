@@ -149,5 +149,52 @@ namespace MobyDickUnitTests
             Assert.IsTrue(result);
 
         }
+
+        [TestMethod]
+        public void completeProgramTest()
+        {
+            String bookPath = "mobydick.txt";
+            String stopWordsPath = "stop-words.txt";
+            List<String> readLines = new List<String>();
+            List<String> bookWords = new List<String>();
+            List<String> stopWords = new List<String>();
+            List<String> myWordsList = new List<String>();
+            List<int> myWordsCountsList = new List<int>();
+
+            readLines = File.ReadAllLines(bookPath).ToList<String>();
+
+            foreach(String line in readLines)
+            {
+                String storageString = new String(line.Where(x => char.IsWhiteSpace(x) || char.IsLetterOrDigit(x)).ToArray());
+                bookWords.AddRange( storageString.Split(' ').ToArray<String>());
+            }
+
+            readLines = File.ReadAllLines(stopWordsPath).ToList<String>();
+
+            foreach (String line in readLines)
+            {
+
+                if (!String.IsNullOrWhiteSpace(line) && !line.Contains("#") && !(line.Length <= 1))
+                {
+                    stopWords.Add(line);
+                }
+
+            }
+
+            Book myBook = new Book(bookWords);
+
+            myWordsCountsList = myBook.getWordsCounts(stopWords);
+
+            //FileStream stopWordsOutPutFile = File.OpenWrite("stopWordsOutput.txt");
+
+            for (int i = 0; i<stopWords.Count; i++)
+            {
+                File.AppendAllText("stopWordsOutput.txt", stopWords[i] + " " + myWordsCountsList[i] + "\n");
+            }
+
+            myWordsList = myBook.getDistinctWords();
+            myWordsCountsList = myBook.getWordsCounts(myWordsList);
+
+        }
     }
 }
