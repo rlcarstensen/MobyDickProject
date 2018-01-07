@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using MobyDickProject;
 using System.IO;
 using System.Linq;
+using System.Diagnostics;
 
 namespace MobyDickUnitTests
 {
@@ -153,6 +154,7 @@ namespace MobyDickUnitTests
         [TestMethod]
         public void completeProgramTest()
         {
+            int count = 0;
             String bookPath = "mobydick.txt";
             String stopWordsPath = "stop-words.txt";
             List<String> readLines = new List<String>();
@@ -160,6 +162,10 @@ namespace MobyDickUnitTests
             List<String> stopWords = new List<String>();
             List<String> myWordsList = new List<String>();
             List<int> myWordsCountsList = new List<int>();
+            List<Tuple<String, int>> wordsWithCounts = new List<Tuple<String, int>>();
+
+            File.WriteAllText("stopWordsOutput.txt", String.Empty);
+            File.WriteAllText("nonStopWordsOutput.txt", String.Empty);
 
             readLines = File.ReadAllLines(bookPath).ToList<String>();
 
@@ -174,7 +180,7 @@ namespace MobyDickUnitTests
             foreach (String line in readLines)
             {
 
-                if (!String.IsNullOrWhiteSpace(line) && !line.Contains("#") && !(line.Length <= 1))
+                if (!String.IsNullOrWhiteSpace(line) && !line.Contains("#"))
                 {
                     stopWords.Add(line);
                 }
@@ -190,11 +196,42 @@ namespace MobyDickUnitTests
             for (int i = 0; i<stopWords.Count; i++)
             {
                 File.AppendAllText("stopWordsOutput.txt", stopWords[i] + " " + myWordsCountsList[i] + "\n");
+                //Debug.WriteLine(stopWords[i] + " " + myWordsCountsList[i]);
             }
 
             myWordsList = myBook.getDistinctWords();
+
+            while(count < myWordsList.Count)
+            {
+                foreach(String stopWord in stopWords)
+                {
+                    if (stopWord.Equals(myWordsList[count]))
+                    {
+                        //Debug.WriteLine(myWordsList.Count);
+                        myWordsList.RemoveAt(count);
+                        //Debug.WriteLine(myWordsList.Count);
+                        count--;
+                    }
+                }
+
+                count++;
+            }
+            
             myWordsCountsList = myBook.getWordsCounts(myWordsList);
 
+            for(int i = 0; i<myWordsList.Count; i++)
+            {
+                wordsWithCounts.Add(new Tuple<String, int>(myWordsList[i], myWordsCountsList[i])); 
+            }
+
+            wordsWithCounts = wordsWithCounts.OrderByDescending(x => x.Item2).ToList();
+
+            for(int i = 0; i<100; i++)
+            {
+                File.AppendAllText("nonStopWordsOutput.txt", wordsWithCounts[i].Item1 + " " + wordsWithCounts[i].Item2 + "\n");
+                Debug.WriteLine(wordsWithCounts[i].Item1 + " " + wordsWithCounts[i].Item2);
+            }
+            
         }
     }
 }
