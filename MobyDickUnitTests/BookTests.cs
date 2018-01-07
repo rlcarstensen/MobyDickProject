@@ -231,7 +231,6 @@ namespace MobyDickUnitTests
                 File.AppendAllText("nonStopWordsOutput.txt", wordsWithCounts[i].Item1 + " " + wordsWithCounts[i].Item2 + "\n");
                 Debug.WriteLine(wordsWithCounts[i].Item1 + " " + wordsWithCounts[i].Item2);
             }
-            
         }
     }
 }
